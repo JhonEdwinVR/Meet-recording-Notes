@@ -1,0 +1,7 @@
+{
+  "name": "Gemini Meeting Notetaker",
+  "description": "An intelligent meeting assistant that records audio, provides a summary, extracts action items, and generates a full transcript using the Gemini API.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
