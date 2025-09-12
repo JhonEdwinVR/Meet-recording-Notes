@@ -1,7 +1,13 @@
+import { Language } from './constants';
 
 export interface Task {
   team: string;
   action: string;
+}
+
+export interface TranscriptEntry {
+  speaker: string;
+  dialogue: string;
 }
 
 export interface MeetingNotes {
@@ -9,5 +15,5 @@ export interface MeetingNotes {
   date: string;
   summary: string[];
   tasks: Task[];
-  transcript: string;
+  transcript: TranscriptEntry[];
 }

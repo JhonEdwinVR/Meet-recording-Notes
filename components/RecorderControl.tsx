@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { MicIcon, StopCircleIcon } from './Icons';
 import Spinner from './Spinner';
+import Waveform from './Waveform';
 
 interface RecorderControlProps {
   isRecording: boolean;
@@ -79,10 +80,16 @@ const RecorderControl: React.FC<RecorderControlProps> = ({ isRecording, isProces
         <h2 className="text-lg font-medium text-slate-300">
           {isProcessing ? "Analyzing Meeting..." : isRecording ? "Recording in Progress..." : "Ready to Record"}
         </h2>
-        <p className="text-sm text-slate-400">
+        <p className={`transition-all duration-300 min-h-[2rem] flex items-center justify-center ${
+            isRecording 
+              ? 'text-2xl font-mono font-bold text-red-400' 
+              : 'text-sm text-slate-400'
+          }`}>
           {isProcessing ? "Please wait a moment." : isRecording ? formatTime(timer) : "Press the button to start recording."}
         </p>
       </div>
+      
+      {isRecording && <Waveform />}
 
       {isProcessing ? (
         <div className="h-20 w-20 flex items-center justify-center">
@@ -94,7 +101,7 @@ const RecorderControl: React.FC<RecorderControlProps> = ({ isRecording, isProces
           disabled={isProcessing}
           className={`relative flex items-center justify-center h-20 w-20 rounded-full transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-offset-slate-800 ${
             isRecording 
-              ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500' 
+              ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500 shadow-lg shadow-red-500/40' 
               : 'bg-cyan-500 hover:bg-cyan-600 focus:ring-cyan-400'
           } disabled:bg-slate-600 disabled:cursor-not-allowed`}
         >

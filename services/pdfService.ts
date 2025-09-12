@@ -1,4 +1,3 @@
-
 import { MeetingNotes } from '../types';
 import { Language } from '../constants';
 import { getTranslator } from '../utils/translations';
@@ -13,7 +12,6 @@ declare global {
 export const generatePdf = (notes: MeetingNotes, language: Language) => {
   const t = getTranslator(language);
   // Access jsPDF through the window object to ensure we're getting the global.
-  // This fixes the "ReferenceError: jspdf is not defined" error.
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   let y = 15;
@@ -100,11 +98,23 @@ export const generatePdf = (notes: MeetingNotes, language: Language) => {
   
   doc.setFontSize(10);
   doc.setFont(undefined, 'normal');
-  const splitTranscript = doc.splitTextToSize(notes.transcript, maxWidth);
-  splitTranscript.forEach((line: string) => {
-    addPageIfNeeded(5);
-    doc.text(line, margin, y);
-    y += 5;
+  notes.transcript.forEach(entry => {
+    addPageIfNeeded(lineHeight * 2); // Estimate space for speaker + one line of dialogue
+    doc.setFont(undefined, 'bold');
+    doc.text(`${entry.speaker}:`, margin, y);
+    doc.setFont(undefined, 'normal');
+    
+    const dialogueIndent = 5;
+    const splitDialogue = doc.splitTextToSize(entry.dialogue, maxWidth - dialogueIndent);
+    
+    splitDialogue.forEach((line: string, index: number) => {
+        if (index > 0) { // No need to advance y for the first line, as it's part of the speaker line
+            y += 5;
+        }
+        addPageIfNeeded(5);
+        doc.text(line, margin + dialogueIndent, y);
+    });
+    y += 8; // Extra space between entries
   });
 
   doc.save('meeting-notes.pdf');

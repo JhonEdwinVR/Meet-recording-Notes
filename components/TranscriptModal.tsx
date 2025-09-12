@@ -1,12 +1,12 @@
-
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Language } from '../constants';
 import { getTranslator } from '../utils/translations';
+import { TranscriptEntry } from '../types';
 
 interface TranscriptModalProps {
   isOpen: boolean;
   onClose: () => void;
-  transcript: string;
+  transcript: TranscriptEntry[];
   language: Language;
 }
 
@@ -35,9 +35,16 @@ const TranscriptModal: React.FC<TranscriptModalProps> = ({ isOpen, onClose, tran
           </button>
         </div>
         <div className="p-6 overflow-y-auto">
-          <p className="whitespace-pre-wrap text-slate-300 leading-relaxed">
-            {transcript}
-          </p>
+          <div className="space-y-4">
+            {transcript.map((entry, index) => (
+              <div key={index} className="flex flex-col">
+                <p className="font-bold text-slate-100 mb-1">{entry.speaker}</p>
+                <p className="whitespace-pre-wrap text-slate-300 leading-relaxed pl-2 border-l-2 border-slate-600">
+                  {entry.dialogue}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="p-4 border-t border-slate-700 text-right">
            <button
